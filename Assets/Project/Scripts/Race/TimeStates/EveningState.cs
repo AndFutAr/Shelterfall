@@ -12,7 +12,7 @@ public class EveningState : ITimeState
     
     public void Open()
     {
-        
+        _stateMachine.OpenTimeOperator<EveningState>();
     }
     public void Update()
     {

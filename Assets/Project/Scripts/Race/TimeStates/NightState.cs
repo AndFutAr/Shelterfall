@@ -11,7 +11,7 @@ public class NightState : ITimeState
     }
     public void Open()
     {
-        
+        _stateMachine.OpenTimeOperator<NightState>();
     }
     public void Update()
     {

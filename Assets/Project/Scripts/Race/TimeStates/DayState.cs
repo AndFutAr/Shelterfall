@@ -12,7 +12,7 @@ public class DayState : ITimeState
         
     public void Open()
     {
-        
+        _stateMachine.OpenTimeOperator<DayState>();
     }
     public void Update()
     {

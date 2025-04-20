@@ -8,6 +8,9 @@ public class CycleTimeReader: MonoBehaviour
 {
     [SerializeField] private bool isDay = false, isEvening = false, isNight = false, isRacing = false;
     private float _dayTime = 10f;
+    public void ChangeDayTime(float dayTime) => _dayTime = dayTime;
+
+    public Action OnDayStart, OnEveningStart, OnNightStart, OnRacingClose;
     
     public bool IsDay() => isDay;
     public bool IsEvening() => isEvening;
@@ -21,29 +24,42 @@ public class CycleTimeReader: MonoBehaviour
     
     public void InverseRace()
     {
-        if(isRacing) isRacing = false;
+        if (isRacing)
+        {
+            isRacing = false;
+            OnRacingClose?.Invoke();
+        }
         else
         {
             isRacing = true;
-            StartCoroutine(GoDay());
+            StartCoroutine(GoToDay());
         }
     }
-    public void GoNight()
+
+    public void GoNight() => StartCoroutine(GoToNight());
+    IEnumerator GoToNight()
     {
         isEvening = false;
+        OnNightStart?.Invoke();
+        yield return new WaitForSeconds(2);
         isNight = true;
     }
 
-    public void FinalNight() => StartCoroutine(GoDay());
-    IEnumerator GoDay()
+    public void GoDay() => StartCoroutine(GoToDay());
+    IEnumerator GoToDay()
     {
         while (true)
         {
             isNight = false;
+            OnDayStart?.Invoke();
+            yield return new WaitForSeconds(2);
             isDay = true;
             yield return new WaitForSeconds(_dayTime);
             isDay = false;
+            OnEveningStart?.Invoke();
+            yield return new WaitForSeconds(2);
             isEvening = true;
+            break;
         }
     }
 }
