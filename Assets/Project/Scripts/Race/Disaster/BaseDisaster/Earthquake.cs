@@ -13,16 +13,22 @@ public class Earthquake : Disaster
     public override void Special()
     {
         cycle.ResetTime();
-        int chance = UnityEngine.Random.Range(0, 60);
-        int defenderNum = chance / 10;
-        switch (defenderNum)
+        int defenderNum = 0, count = 0;
+        for (int i = 0; i <= 5; i++)
         {
-            case 0: cycle.CycleData.qualityMaterials.LowerUpgrader(); break;
-            case 1: cycle.CycleData.repairRobots.LowerUpgrader(); break;
-            case 2: cycle.CycleData.boer.LowerUpgrader(); break;
-            case 3: cycle.CycleData.artificialSun.LowerUpgrader(); break;
-            case 4: cycle.CycleData.rightPeople.LowerUpgrader(); break;
-            case 5: cycle.CycleData.majorRepairs.LowerUpgrader(); break;
+            if (cycle.CycleData._BaseDictionaries[i].Count >= 1)
+            {
+                count++;
+                defenderNum = i;
+            }
         }
+        
+        while (cycle.CycleData._BaseDictionaries[defenderNum].Count == 0 && count > 0)
+        {
+            int chance = UnityEngine.Random.Range(0, 60);
+            defenderNum = chance / 10;
+        }
+
+        cycle.CycleData._BaseDictionaries[defenderNum].LowerUpgrader();
     }
 }

@@ -20,16 +20,7 @@ public class BaseUpgraderComponent : MonoBehaviour, IPointerEnterHandler, IPoint
     public void SetUpgraders(CycleComponent _cycle)
     {
         cycle = _cycle;
-        _baseUpgraders = new Dictionary<Int32, BaseUpgrader>()
-        {
-            { 1, cycle.CycleData.qualityMaterials},
-            { 2, cycle.CycleData.repairRobots},
-            { 3, cycle.CycleData.boer},
-            { 4, cycle.CycleData.artificialSun},
-            { 5, cycle.CycleData.rightPeople},
-            { 6, cycle.CycleData.majorRepairs},
-        };
-        _baseUpgrader = _baseUpgraders[defenderNum];
+        _baseUpgrader = cycle.CycleData._BaseDictionaries[defenderNum - 1];
         isClicked = false;
     }
 

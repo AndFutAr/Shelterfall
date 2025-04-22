@@ -27,7 +27,7 @@ public abstract class ElementUpgrader
 
     public void IncreaseUpgrader()
     {
-        if (storage.PepperCount >= price && count < 3)
+        if (storage.PepperCount >= price * cycle.CycleData.costFactor && count < 3)
         {
             storage.SpendPepper(price);
             count++;

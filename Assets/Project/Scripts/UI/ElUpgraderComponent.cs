@@ -20,15 +20,7 @@ public class ElUpgraderComponent : MonoBehaviour, IPointerEnterHandler, IPointer
     public void SetUpgraders(CycleComponent _cycle)
     {
         cycle = _cycle;
-        _elementUpgraders = new Dictionary<Int32, ElementUpgrader>()
-        {
-            { 1, cycle.CycleData.meteorDefender},
-            { 2, cycle.CycleData.earthDefender},
-            { 3, cycle.CycleData.energyDefender},
-            { 4, cycle.CycleData.cyberDefender},
-            { 5, cycle.CycleData.fogDefender},
-        };
-        _elUpgrader = _elementUpgraders[defenderNum];
+        _elUpgrader = cycle.CycleData._ElDictionaries[defenderNum - 1];
         isClicked = false;
     }
 

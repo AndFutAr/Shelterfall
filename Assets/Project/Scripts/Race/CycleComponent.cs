@@ -12,19 +12,10 @@ public struct CycleData
     public float lastPepper;
     public float costFactor;
     public float allPepper;
-    
-    public QualityMaterials qualityMaterials;
-    public RepairRobots repairRobots;
-    public Boer boer;
-    public ArtificialSun artificialSun;
-    public RightPeople rightPeople;
-    public MajorRepairs majorRepairs;
-    
-    public MeteorDefender meteorDefender;
-    public EarthDefender earthDefender;
-    public EnergyDefender energyDefender;
-    public CyberDefender cyberDefender;
-    public FogDefender fogDefender;
+
+    public Dictionary<int, BaseUpgrader> _BaseDictionaries;
+    public Dictionary<int, ElementUpgrader> _ElDictionaries;
+    public int lastDisaster;
 
     public float dayRange;
     public float dayRange2;
@@ -141,19 +132,25 @@ public class CycleComponent : MonoBehaviour, ITimeStateMachine
             CycleData.costFactor = 1;
             CycleData.allPepper = 0;
 
-            CycleData.qualityMaterials = new QualityMaterials(this, PepperStorage, Shelter, 40, 0, 100);
-            CycleData.repairRobots = new RepairRobots(this, PepperStorage, Shelter, 50, 0, 9);
-            CycleData.boer = new Boer(this, PepperStorage, Shelter, 30, 0, 100);
-            CycleData.artificialSun = new ArtificialSun(this, PepperStorage, Shelter, 60, 0, 100);
-            CycleData.rightPeople = new RightPeople(this, PepperStorage, Shelter, 50, 0, 14);
-            CycleData.majorRepairs = new MajorRepairs(this, PepperStorage, Shelter, 60, 0, 100);
+            CycleData._BaseDictionaries = new Dictionary<int, BaseUpgrader>()
+            {
+                { 0, new QualityMaterials(this, PepperStorage, Shelter, 40, 0, 100) },
+                { 1, new RepairRobots(this, PepperStorage, Shelter, 50, 0, 9) },
+                { 2, new Boer(this, PepperStorage, Shelter, 30, 0, 100) },
+                { 3, new ArtificialSun(this, PepperStorage, Shelter, 60, 0, 100) },
+                { 4, new RightPeople(this, PepperStorage, Shelter, 50, 0, 14) },
+                { 5, new MajorRepairs(this, PepperStorage, Shelter, 60, 0, 100) },
+            };
+            CycleData._ElDictionaries = new Dictionary<int, ElementUpgrader>()
+            {
+                { 0, new MeteorDefender(this, PepperStorage, Shelter, 70, 0) },
+                { 1, new EarthDefender(this, PepperStorage, Shelter, 70, 0) },
+                { 2, new EnergyDefender(this, PepperStorage, Shelter, 70, 0) },
+                { 3, new CyberDefender(this, PepperStorage, Shelter, 70, 0) },
+                { 4, new FogDefender(this, PepperStorage, Shelter, 70, 0) }, 
+            };
 
-            CycleData.meteorDefender = new MeteorDefender(this, PepperStorage, Shelter, 70, 0);
-            CycleData.earthDefender = new EarthDefender(this, PepperStorage, Shelter, 70, 0);
-            CycleData.energyDefender = new EnergyDefender(this, PepperStorage, Shelter, 70, 0);
-            CycleData.cyberDefender = new CyberDefender(this, PepperStorage, Shelter, 70, 0);
-            CycleData.fogDefender = new FogDefender(this, PepperStorage, Shelter, 70, 0);
-
+            CycleData.lastDisaster = 10;
             CycleData.dayRange = 1;
             CycleData.dayRange2 = 1;
             CycleData.eveningRange = 2 + RaceData.AddTwists;
@@ -178,25 +175,25 @@ public class CycleComponent : MonoBehaviour, ITimeStateMachine
             CycleData.costFactor = slCycle.costFactor;
             CycleData.allPepper = slCycle.allPepper;
 
-            CycleData.qualityMaterials = new QualityMaterials
-                (this, PepperStorage, Shelter, 40, slCycle.qualityMaterials, 100);
-            CycleData.repairRobots = new RepairRobots
-                (this, PepperStorage, Shelter, 50, slCycle.repairRobots, 9);
-            CycleData.boer = new Boer
-                (this, PepperStorage, Shelter, 30, slCycle.boer, 100);
-            CycleData.artificialSun = new ArtificialSun
-                (this, PepperStorage, Shelter, 60, slCycle.artificialSun, 100);
-            CycleData.rightPeople = new RightPeople
-                (this, PepperStorage, Shelter, 50, slCycle.rightPeople, 14);
-            CycleData.majorRepairs = new MajorRepairs
-                (this, PepperStorage, Shelter, 60, slCycle.majorRepairs, 100);
+            CycleData._BaseDictionaries = new Dictionary<int, BaseUpgrader>()
+            {
+                { 0, new QualityMaterials(this, PepperStorage, Shelter, 40, slCycle.qualityMaterials, 100) },
+                { 1, new RepairRobots(this, PepperStorage, Shelter, 50, slCycle.repairRobots, 9) },
+                { 2, new Boer(this, PepperStorage, Shelter, 30, slCycle.boer, 100) },
+                { 3, new ArtificialSun(this, PepperStorage, Shelter, 60, slCycle.artificialSun, 100) },
+                { 4, new RightPeople(this, PepperStorage, Shelter, 50, slCycle.rightPeople, 14) },
+                { 5, new MajorRepairs(this, PepperStorage, Shelter, 60, slCycle.majorRepairs, 100) },
+            };
+            CycleData._ElDictionaries = new Dictionary<int, ElementUpgrader>()
+            {
+                { 0, new MeteorDefender(this, PepperStorage, Shelter, 70, slCycle.meteorDefender) },
+                { 1, new EarthDefender(this, PepperStorage, Shelter, 70, slCycle.earthDefender) },
+                { 2, new EnergyDefender(this, PepperStorage, Shelter, 70, slCycle.energyDefender) },
+                { 3, new CyberDefender(this, PepperStorage, Shelter, 70, slCycle.cyberDefender) },
+                { 4, new FogDefender(this, PepperStorage, Shelter, 70, slCycle.fogDefender) }, 
+            };
 
-            CycleData.meteorDefender = new MeteorDefender(this, PepperStorage, Shelter, 70, slCycle.meteorDefender);
-            CycleData.earthDefender = new EarthDefender(this, PepperStorage, Shelter, 70, slCycle.earthDefender);
-            CycleData.energyDefender = new EnergyDefender(this, PepperStorage, Shelter, 70, slCycle.energyDefender);
-            CycleData.cyberDefender = new CyberDefender(this, PepperStorage, Shelter, 70, slCycle.cyberDefender);
-            CycleData.fogDefender = new FogDefender(this, PepperStorage, Shelter, 70, slCycle.fogDefender);
-
+            CycleData.lastDisaster = slCycle.lastDisaster;
             CycleData.dayRange = slCycle.dayRange;
             CycleData.dayRange2 = slCycle.dayRange2;
             CycleData.eveningRange = slCycle.eveningRange + RaceData.AddTwists;

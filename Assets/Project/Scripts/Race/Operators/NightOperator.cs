@@ -10,7 +10,7 @@ public class NightOperator : Operator
     [SerializeField] private bool isBid = false;
     [SerializeField] private float bidRange = 0;
     private Disaster disaster, bidDisaster;
-    private Dictionary<Int32, Disaster> _nightDisasters;
+    private Dictionary<int, Disaster> _nightDisasters;
     
     public void SetOperator(float range) => damage = range;
 
@@ -25,28 +25,34 @@ public class NightOperator : Operator
         if(cycle.transform.parent.GetComponent<RaceController>().RaceData.IsRerollDef == 1 && cycle.CycleData.cycleNum % 5 == 0)
             cycle.RaceData.IsRerollBoss = 1;
         
-        _nightDisasters = new Dictionary<Int32, Disaster>()
+        _nightDisasters = new Dictionary<int, Disaster>()
         {
-            { 0, new MeteorShower(cycle, storage, shelter, damage, cycle.CycleData.meteorDefender) },
-            { 1, new Earthquake(cycle, storage, shelter, damage, cycle.CycleData.earthDefender) },
-            { 2, new EnergyStorm(cycle, storage, shelter, damage, cycle.CycleData.energyDefender) },
-            { 3, new CyberInvasion(cycle, storage, shelter, damage, cycle.CycleData.cyberDefender) },
-            { 4, new AnomalyFog(cycle, storage, shelter, damage, cycle.CycleData.fogDefender) },
-            { 5, new MeteorShowerBoss(cycle, storage, shelter, damage, cycle.CycleData.meteorDefender) },
-            { 6, new EarthquakeBoss(cycle, storage, shelter, damage, cycle.CycleData.earthDefender) },
-            { 7, new EnergyStormBoss(cycle, storage, shelter, damage, cycle.CycleData.energyDefender) },
-            { 8, new CyberInvasionBoss(cycle, storage, shelter, damage, cycle.CycleData.cyberDefender) },
-            { 9, new AnomalyFogBoss(cycle, storage, shelter, damage, cycle.CycleData.fogDefender) }
+            { 0, new MeteorShower(cycle, storage, shelter, damage, cycle.CycleData._ElDictionaries[0]) },
+            { 1, new Earthquake(cycle, storage, shelter, damage, cycle.CycleData._ElDictionaries[1]) },
+            { 2, new EnergyStorm(cycle, storage, shelter, damage, cycle.CycleData._ElDictionaries[2]) },
+            { 3, new CyberInvasion(cycle, storage, shelter, damage, cycle.CycleData._ElDictionaries[3]) },
+            { 4, new AnomalyFog(cycle, storage, shelter, damage, cycle.CycleData._ElDictionaries[4]) },
+            { 5, new MeteorShowerBoss(cycle, storage, shelter, damage, cycle.CycleData._ElDictionaries[0]) },
+            { 6, new EarthquakeBoss(cycle, storage, shelter, damage, cycle.CycleData._ElDictionaries[1]) },
+            { 7, new EnergyStormBoss(cycle, storage, shelter, damage, cycle.CycleData._ElDictionaries[2]) },
+            { 8, new CyberInvasionBoss(cycle, storage, shelter, damage, cycle.CycleData._ElDictionaries[3]) },
+            { 9, new AnomalyFogBoss(cycle, storage, shelter, damage, cycle.CycleData._ElDictionaries[4]) }
         };
     }
 
-    public void Bid(int type, int disasterNum)
+    public void ChooseBid(int type)
     {
-        bidDisaster = _nightDisasters[type];
-        bidRange = storage.PepperCount / 2.0f;
-        storage.SpendPepper(bidRange);
-        isBid = true;
-        SpinTheWheel(disasterNum);
+        if (cycle.CycleData.cycleNum % 5 != 0) bidDisaster = _nightDisasters[type];
+        else bidDisaster = _nightDisasters[type + 5];
+    }
+    public void Bid()
+    {
+        if (bidDisaster != null)
+        {
+            bidRange = storage.PepperCount / 2.0f;
+            storage.SpendPepper(bidRange);
+            isBid = true;
+        }
     }
     public void BidCount() =>
         storage.AddPepper(bidRange * 2.0f);
@@ -56,32 +62,40 @@ public class NightOperator : Operator
 
     public void SpinTheWheel(int disasterNum)
     {
-        StopCoroutine(Waiter());
+        StopCoroutine(Waiter(disasterNum));
         if (cycle.DayNum() % 5 != 0 || cycle.DayNum() < 5)
             disaster = _nightDisasters[disasterNum];
         else
             disaster = _nightDisasters[disasterNum + 5];
-        StartCoroutine(Waiter());
+        Debug.Log(disaster);
+        StartCoroutine(Waiter(disasterNum));
     }
-    IEnumerator Waiter()
+    IEnumerator Waiter(int disasterNum)
     {
-        yield return new WaitForSeconds(2);
-        StartDisaster();
+        yield return new WaitForSeconds(4);
+        StartDisaster(disasterNum);
     }
-    public void StartDisaster()
+    public void StartDisaster(int disasterNum)
     {
         disaster.OpenDisaster();
-
+        cycle.CycleData.lastDisaster = disasterNum;
         if (isBid)
         {
-            if (bidDisaster == disaster) {BidCount(); Debug.Log("you win");}
+            if (bidDisaster == disaster)
+            {
+                BidCount(); 
+                Debug.Log("you win");
+            }
+            else
+            {
+                Debug.Log("you lose");
+                int chance = Random.Range(0, 100);
+                if (chance < cycle.RaceData.ChanceAvoidLossBid * 100)
+                {
+                    Debug.Log("return");
+                    ReturnBid();
+                }
+            }
         }
-        else
-        {
-            int chance = Random.Range(0, 100);
-            if(chance <= cycle.RaceData.ChanceAvoidLossBid * 100)
-                ReturnBid();
-        }
-        Debug.Log(disaster);
     }
 }

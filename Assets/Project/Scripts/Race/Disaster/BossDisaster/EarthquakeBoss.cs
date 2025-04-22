@@ -10,27 +10,36 @@
     public override void Special()
     {
         cycle.ResetTime();
-        int chance = UnityEngine.Random.Range(0, 60);
-        int defenderNum = chance / 10;
-        switch (defenderNum)
+        int defenderNum = 0, count = 0;
+        for (int i = 0; i <= 5; i++)
         {
-            case 0: cycle.CycleData.qualityMaterials.LowerUpgrader(); break;
-            case 1: cycle.CycleData.repairRobots.LowerUpgrader(); break;
-            case 2: cycle.CycleData.boer.LowerUpgrader(); break;
-            case 3: cycle.CycleData.artificialSun.LowerUpgrader(); break;
-            case 4: cycle.CycleData.rightPeople.LowerUpgrader(); break;
-            case 5: cycle.CycleData.majorRepairs.LowerUpgrader(); break;
+            if (cycle.CycleData._BaseDictionaries[i].Count >= 1)
+            {
+                count++;
+                defenderNum = i;
+            }
         }
+        while (cycle.CycleData._BaseDictionaries[defenderNum].Count == 0 && count > 0)
+        {
+            int chance = UnityEngine.Random.Range(0, 60);
+            defenderNum = chance / 10;
+        }
+        cycle.CycleData._BaseDictionaries[defenderNum].LowerUpgrader();
         
-        int chanceEl = UnityEngine.Random.Range(0, 50);
-        int defenderElNum = chance / 10;
-        switch (defenderElNum)
+        int defenderElNum = 0, countEl = 0;
+        for (int i = 0; i <= 4; i++)
         {
-            case 0: cycle.CycleData.meteorDefender.LowerUpgrader(); break;
-            case 1: cycle.CycleData.earthDefender.LowerUpgrader(); break;
-            case 2: cycle.CycleData.energyDefender.LowerUpgrader(); break;
-            case 3: cycle.CycleData.cyberDefender.LowerUpgrader(); break;
-            case 4: cycle.CycleData.fogDefender.LowerUpgrader(); break;
+            if (cycle.CycleData._ElDictionaries[i].Count >= 1)
+            {
+                countEl++;
+                defenderElNum = i;
+            }
         }
+        while (cycle.CycleData._ElDictionaries[defenderElNum].Count == 0 && countEl > 0)
+        {
+            int chanceEl = UnityEngine.Random.Range(0, 50);
+            defenderElNum = chanceEl / 10;
+        }
+        cycle.CycleData._ElDictionaries[defenderElNum].LowerUpgrader();
     }
 }

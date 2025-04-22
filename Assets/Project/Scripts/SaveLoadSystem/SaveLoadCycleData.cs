@@ -26,6 +26,7 @@ public class SaveLoadCycleData
     public int cyberDefender;
     public int fogDefender;
 
+    public int lastDisaster;
     public float dayRange;
     public float dayRange2;
     public float eveningRange;
@@ -48,19 +49,20 @@ public class SaveLoadCycleData
         PlayerPrefs.SetFloat("Costfactor", data.costFactor);
         PlayerPrefs.SetFloat("AllPepper", data.allPepper);
         
-        PlayerPrefs.SetInt("QualityMaterials", data.qualityMaterials.Count);
-        PlayerPrefs.SetInt("RepairRobots", data.repairRobots.Count);
-        PlayerPrefs.SetInt("Boer", data.boer.Count);
-        PlayerPrefs.SetInt("ArtificialSun", data.artificialSun.Count);
-        PlayerPrefs.SetInt("RightPeople", data.rightPeople.Count);
-        PlayerPrefs.SetInt("MajorRepairs", data.majorRepairs.Count);
+        PlayerPrefs.SetInt("QualityMaterials", data._BaseDictionaries[0].Count);
+        PlayerPrefs.SetInt("RepairRobots", data._BaseDictionaries[1].Count);
+        PlayerPrefs.SetInt("Boer", data._BaseDictionaries[2].Count);
+        PlayerPrefs.SetInt("ArtificialSun", data._BaseDictionaries[3].Count);
+        PlayerPrefs.SetInt("RightPeople", data._BaseDictionaries[4].Count);
+        PlayerPrefs.SetInt("MajorRepairs", data._BaseDictionaries[5].Count);
         
-        PlayerPrefs.SetInt("MeteorDefender", data.meteorDefender.Count);
-        PlayerPrefs.SetInt("EarthDefender", data.earthDefender.Count);
-        PlayerPrefs.SetInt("EnergyDefender", data.energyDefender.Count);
-        PlayerPrefs.SetInt("CyberDefender", data.cyberDefender.Count);
-        PlayerPrefs.SetInt("FogDefender", data.fogDefender.Count);
-        
+        PlayerPrefs.SetInt("MeteorDefender", data._ElDictionaries[0].Count);
+        PlayerPrefs.SetInt("EarthDefender", data._ElDictionaries[1].Count);
+        PlayerPrefs.SetInt("EnergyDefender", data._ElDictionaries[2].Count);
+        PlayerPrefs.SetInt("CyberDefender", data._ElDictionaries[3].Count);
+        PlayerPrefs.SetInt("FogDefender", data._ElDictionaries[4].Count);
+
+        PlayerPrefs.SetInt("LastDisaster", data.lastDisaster);
         PlayerPrefs.SetFloat("DayRange", data.dayRange);
         PlayerPrefs.SetFloat("DayRange2", data.dayRange2);
         PlayerPrefs.SetFloat("EveningRange", data.eveningRange - controller.RaceData.AddTwists);
@@ -95,6 +97,7 @@ public class SaveLoadCycleData
         cyberDefender = PlayerPrefs.GetInt("CyberDefender");
         fogDefender = PlayerPrefs.GetInt("FogDefender");
         
+        lastDisaster = PlayerPrefs.GetInt("LastDisaster");
         dayRange = PlayerPrefs.GetFloat("DayRange");
         dayRange2 = PlayerPrefs.GetFloat("DayRange2");
         eveningRange = PlayerPrefs.GetFloat("EveningRange");
