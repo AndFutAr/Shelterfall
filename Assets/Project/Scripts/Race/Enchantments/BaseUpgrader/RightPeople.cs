@@ -6,13 +6,13 @@ public class RightPeople : BaseUpgrader
 
     public override void Upgrade()
     {
-        if(count == 1) cycle.MinusCostFactor(0.1f);
-        else cycle.MinusCostFactor(0.05f);
+        if(count == 1) cycle.MinusCostFactor(0.05f);
+        else cycle.MinusCostFactor(0.025f);
     }
 
     public override void Worse()
     {
-        if(count == 0) cycle.MinusCostFactor(-0.1f);
-        else cycle.MinusCostFactor(-0.05f);
+        if(count == 0) cycle.MinusCostFactor(-0.05f);
+        else cycle.MinusCostFactor(-0.025f);
     }
 }

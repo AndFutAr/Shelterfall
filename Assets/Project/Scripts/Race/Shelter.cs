@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Shelter : MonoBehaviour
 {
-    public Shelter(int MaxHp) => HP = MaxHp;
+    public Shelter(int MaxHp) => hp = MaxHp;
     private int maxHp = 100, hp;
 
     public void SetShelter(int MaxHp, int LastHp)
@@ -11,12 +11,14 @@ public class Shelter : MonoBehaviour
         maxHp = MaxHp;
         hp = LastHp;
     }
-    public int HP
-    {
-        get => hp;
-        set => hp = value;
-    }
+    public float HP => hp;
     public int MaxHP => maxHp;
+
+    private void Update()
+    {
+        if(hp > maxHp) hp = maxHp;
+        transform.GetComponent<CycleComponent>().CycleData.lastHP = hp;
+    }
 
     public void SpendHP(float range)
     {
@@ -30,8 +32,8 @@ public class Shelter : MonoBehaviour
     }
     public void PlusHP(float range)
     {
-        maxHp += (int)(maxHp * range);
-        hp += (int)(maxHp * range);
+        hp += (int)range;
+        maxHp += (int)range;
         transform.GetComponent<CycleComponent>().CycleData.lastHP = hp;
         transform.GetComponent<CycleComponent>().CycleData.maxHP = maxHp;
     }

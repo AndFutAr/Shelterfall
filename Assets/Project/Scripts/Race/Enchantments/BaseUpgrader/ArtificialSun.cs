@@ -6,13 +6,13 @@ public class ArtificialSun : BaseUpgrader
 
     public override void Upgrade()
     {
-        if (count == 1) cycle.IncreaseDay(5f);
-        else cycle.IncreaseDay(2.5f);
+        if (count == 1) cycle.IncreaseDay(3f);
+        else cycle.IncreaseDay(1.5f);
     }
 
     public override void Worse()
     {
-        if (count == 0) cycle.IncreaseDay(-5f);
-        else cycle.IncreaseDay(-2.5f);
+        if (count == 0) cycle.IncreaseDay(-3f);
+        else cycle.IncreaseDay(-1.5f);
     }
 }

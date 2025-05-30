@@ -205,8 +205,8 @@ public class CycleComponent : MonoBehaviour, ITimeStateMachine
             CycleData.nightBase = slCycle.nightBase;
         }
         slCycle.SaveCycle(CycleData, transform.parent.GetComponent<RaceController>());
-
-        Shelter.SetShelter(RaceData.MaxHp, CycleData.lastHP);
+        
+        Shelter.SetShelter(CycleData.maxHP, CycleData.lastHP);
         PepperStorage.SetupPepper(CycleData.lastPepper);
         PepperBank.NewStorage(PepperStorage, CycleData.lastPepper);
         TimeReader.ChangeDayTime(CycleData.cycleTime);

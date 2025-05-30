@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
@@ -16,7 +17,8 @@ public class EveningOperator : Operator
     private GameObject upgraderBase1, upgraderBase2, upgraderElement;
     private int priceBase = 10, priceElement = 10;
     
-    [SerializeField] private Vector3 base1Pos = new Vector3(-400, 0, 0), base2Pos = new Vector3(-25, 0, 0), elementPos = new Vector3(400, 0, 0);
+    [SerializeField] private Vector3 st1Pos = new Vector3(-330, 220, 0), st2Pos = new Vector3(-75, 220, 0), elstPos = new Vector3(200, 220, 0);
+    [SerializeField] private Vector3 base1Pos = new Vector3(-330, 220, 0), base2Pos = new Vector3(-75, 220, 0), elementPos = new Vector3(200, 220, 0);
     [SerializeField] private GameObject[] baseUpgraders = new GameObject[6];
     [SerializeField] private GameObject[] elementUpgraders = new GameObject[5];
 
@@ -50,7 +52,7 @@ public class EveningOperator : Operator
     }
     public void RerollBase(bool first)
     {
-        if (twistsBase > 0)
+        if (twistsBase > 0 && (storage.PepperCount >= priceBase || first))
         {
             twistsBase--;
             if (!first)
@@ -73,8 +75,10 @@ public class EveningOperator : Operator
             upgraderBase1.transform.SetParent(Canvas.transform.GetChild(2).GetChild(4));
             upgraderBase2.transform.SetParent(Canvas.transform.GetChild(2).GetChild(4));
             
-            upgraderBase1.transform.localPosition = base1Pos;
-            upgraderBase2.transform.localPosition = base2Pos;
+            upgraderBase1.transform.localPosition = st1Pos;
+            upgraderBase2.transform.localPosition = st2Pos;
+            upgraderBase1.transform.DOLocalMove(base1Pos, 0.5f);
+            upgraderBase2.transform.DOLocalMove(base2Pos, 0.5f);
             
             upgraderBase1.GetComponent<BaseUpgraderComponent>().SetUpgraders(cycle);
             upgraderBase2.GetComponent<BaseUpgraderComponent>().SetUpgraders(cycle);
@@ -82,7 +86,7 @@ public class EveningOperator : Operator
     }
     public void RerollElement(bool first)
     {
-        if (twistsElement > 0)
+        if (twistsElement > 0 && (storage.PepperCount >= priceElement || first))
         {
             twistsElement--;
             if (!first)
@@ -98,7 +102,9 @@ public class EveningOperator : Operator
             upgraderElement = Instantiate(elementUpgraders[ElementInd], elementPos, Quaternion.identity);
 
             upgraderElement.transform.SetParent(Canvas.transform.GetChild(2).GetChild(4));
-            upgraderElement.transform.localPosition = elementPos;
+            upgraderElement.transform.localPosition = elstPos;
+            upgraderElement.transform.DOLocalMove(elementPos, 0.5f);
+            
 
             upgraderElement.GetComponent<ElUpgraderComponent>().SetUpgraders(cycle);
         }

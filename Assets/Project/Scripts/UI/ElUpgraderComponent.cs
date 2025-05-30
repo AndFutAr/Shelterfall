@@ -40,7 +40,6 @@ public class ElUpgraderComponent : MonoBehaviour, IPointerEnterHandler, IPointer
         {
             isClicked = true;
             _elUpgrader.IncreaseUpgrader();
-            cycle.transform.parent.GetComponent<RaceController>().ui.CloseRerollElement();
         }
     }
 

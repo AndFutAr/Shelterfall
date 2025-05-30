@@ -72,9 +72,12 @@ MonoBehaviour:
   Base1Ind: 0
   Base2Ind: 0
   ElementInd: 0
-  base1Pos: {x: -400, y: 0, z: 0}
-  base2Pos: {x: -25, y: 0, z: 0}
-  elementPos: {x: 400, y: 0, z: 0}
+  st1Pos: {x: -320, y: -800, z: 0}
+  st2Pos: {x: -65, y: -800, z: 0}
+  elstPos: {x: 300, y: -800, z: 0}
+  base1Pos: {x: -320, y: -350, z: 0}
+  base2Pos: {x: -65, y: -350, z: 0}
+  elementPos: {x: 300, y: -350, z: 0}
   baseUpgraders:
   - {fileID: 3405967855001267199, guid: 1e648812a35c0c44f8daaff805af74fe, type: 3}
   - {fileID: 1769019620004398799, guid: 732529b177f71de43b515bdd3ae98317, type: 3}
@@ -88,6 +91,7 @@ MonoBehaviour:
   - {fileID: 4990462326346247558, guid: d51f7746ab1f35345a8f3db2b271bfeb, type: 3}
   - {fileID: 476853796076981978, guid: 3ed8dd2bff730454cab67fa2f934726d, type: 3}
   - {fileID: 8428182572531565094, guid: e3a0b7d3870fcb247a11fbaea9c9a451, type: 3}
+  Canvas: {fileID: 0}
 --- !u!114 &4698395075869329054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,3 +108,4 @@ MonoBehaviour:
   storage: {fileID: 0}
   shelter: {fileID: 0}
   isBid: 0
+  bidRange: 0

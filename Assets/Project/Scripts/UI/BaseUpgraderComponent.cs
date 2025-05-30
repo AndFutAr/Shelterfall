@@ -29,7 +29,7 @@ public class BaseUpgraderComponent : MonoBehaviour, IPointerEnterHandler, IPoint
         if (!isClicked)
         {
             UpgraderInfo.SetActive(true);
-            textCost.text = (_baseUpgrader.Price * cycle.CycleData.costFactor).ToString();
+            textCost.text = ((int)(_baseUpgrader.Price * cycle.CycleData.costFactor * 10)/10).ToString();
             if (_baseUpgrader.Count == 0) textProcent.text = procent1;
             else textProcent.text = defProcent;
         }
@@ -41,7 +41,6 @@ public class BaseUpgraderComponent : MonoBehaviour, IPointerEnterHandler, IPoint
             isClicked = true;
             Debug.Log(_baseUpgrader);
             _baseUpgrader.IncreaseUpgrader();
-            cycle.transform.parent.GetComponent<RaceController>().ui.CloseRerollBase();
         }
     }
     public void OnPointerExit(PointerEventData eventData) => UpgraderInfo.SetActive(false);

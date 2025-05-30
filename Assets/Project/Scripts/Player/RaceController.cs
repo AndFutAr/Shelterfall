@@ -5,6 +5,7 @@ using UnityEngine;
 
 public struct RaceData
 {
+    public float SoundVolume;
     public int BestRace;
     public int RaceNum;
     public int PepperFragments;
@@ -26,24 +27,18 @@ public struct RaceData
     public int IsAvoidDeath;
     public float ChanceAvoidLossBid;
     
-    public EternalRepair eternalRepair;
-    public AnomalousShield anomalousShield;
-    public RegeneratingAloys regeneratingAloys;
-    
-    public SecondaryProcessing secondaryProcessing;
-    public SecretWarehouses secretWarehouses;
-    public LocalResearch localResearch;
-    public PocketDimension pocketDimension;
-    
-    public AnomalousRadioReceiver anomalousRadioReceiver;
-    public ReverseTimeClock reverseTimeClock;
-    public SchrodingerHat schrodingerHat;
-    public StudyOfGameTheory studyOfGameTheory;
+    public Dictionary<Int32, Progress> _progressList;
 }
 public class RaceController : MonoBehaviour
 {
     private SaveLoadRaceData slRace = new SaveLoadRaceData();
-    public void SaveRace() => slRace.SaveRace(RaceData);
+
+    public void SaveRace()
+    {
+        RaceData.SoundVolume = ui.SoundVolume;
+        slRace.SaveRace(RaceData);
+    }
+
     public RaceData RaceData;
     public CycleTimeReader timeReader;
     public PepperBank pepperBank;
@@ -51,16 +46,17 @@ public class RaceController : MonoBehaviour
     
     private CycleComponent _cycle;
     private Shelter shelter;
+    public CycleComponent Cycle => _cycle;
     
     [SerializeField] private GameObject _cycleControllerPrefab, _cycleController;
-    private Dictionary<Int32, Progress> _progressList;
     
     [SerializeField] private ShelterView _shelterView;
 
     void Awake()
-    {
+    { 
         if (slRace.LoadRace() == 0)
         {
+            RaceData.SoundVolume = 1;
             RaceData.BestRace = 0;
             RaceData.RaceNum = 1;
             RaceData.PepperFragments = 0;
@@ -79,25 +75,26 @@ public class RaceController : MonoBehaviour
             RaceData.IsRerollBoss = 0;
             RaceData.IsRerollDef = 0;
             RaceData.IsAvoidDeath = 0;
-            RaceData.ChanceAvoidLossBid = 1;
+            RaceData.ChanceAvoidLossBid = 0;
 
-            _progressList = new Dictionary<int, Progress>()
+            RaceData._progressList = new Dictionary<int, Progress>()
             {
-                { 0, RaceData.eternalRepair = new EternalRepair(100, 0, false) },
-                { 1, RaceData.anomalousShield = new AnomalousShield(125, 0, false) },
-                { 2, RaceData.regeneratingAloys = new RegeneratingAloys(100, 0, false) },
-                { 3, RaceData.secondaryProcessing = new SecondaryProcessing(100, 0, false) },
-                { 4, RaceData.secretWarehouses = new SecretWarehouses(100, 0, false)},
-                { 5, RaceData.localResearch = new LocalResearch(200, 0, false) },
-                { 6, RaceData.pocketDimension = new PocketDimension(150, 0, false) },
-                { 7, RaceData.anomalousRadioReceiver = new AnomalousRadioReceiver(400, 0, true) },
-                { 8, RaceData.reverseTimeClock = new ReverseTimeClock(600, 0, true) },
-                { 9, RaceData.schrodingerHat = new SchrodingerHat(800, 0, true) },
-                { 10, RaceData.studyOfGameTheory = new StudyOfGameTheory(150, 0, false) }
+                { 0, new EternalRepair(this, 100, 0, false) },
+                { 1, new AnomalousShield(this, 125, 0, false) },
+                { 2, new RegeneratingAloys(this, 100, 0, false) },
+                { 3, new SecondaryProcessing(this, 100, 0, false) },
+                { 4, new SecretWarehouses(this, 100, 0, false)},
+                { 5, new LocalResearch(this, 200, 0, false) },
+                { 6, new PocketDimension(this, 150, 0, false) },
+                { 7, new AnomalousRadioReceiver(this, 400, 0, true) },
+                { 8, new ReverseTimeClock(this, 600, 0, true) },
+                { 9, new SchrodingerHat(this, 800, 0, true) },
+                { 10, new StudyOfGameTheory(this, 150, 0, false) }
             };
         }
         else
         {
+            RaceData.SoundVolume = slRace.SoundVolume;
             RaceData.BestRace = slRace.BestRace;
             RaceData.RaceNum = slRace.RaceNum;
             RaceData.PepperFragments = slRace.PepperFragments;
@@ -106,7 +103,7 @@ public class RaceController : MonoBehaviour
             RaceData.MaxHpFactor = slRace.MaxHpFactor;
             RaceData.BossDamageFactor = slRace.BossDamageFactor;
             RaceData.HealFactor = slRace.HealFactor;
-            RaceData.MaxHp = (int)(100 * slRace.MaxHpFactor);
+            RaceData.MaxHp = (int)(100 * RaceData.MaxHpFactor);
 
             RaceData.PepperFactor = slRace.PepperFactor;
             RaceData.TreftFactor = slRace.TreftFactor;
@@ -118,22 +115,22 @@ public class RaceController : MonoBehaviour
             RaceData.IsAvoidDeath = slRace.IsAvoidDeath;
             RaceData.ChanceAvoidLossBid = slRace.ChanceAvoidLossBid;
 
-            _progressList = new Dictionary<int, Progress>()
+            RaceData._progressList = new Dictionary<int, Progress>()
             {
-                { 0, RaceData.eternalRepair = new EternalRepair(100, slRace.eternalRepair, false) },
-                { 1, RaceData.anomalousShield = new AnomalousShield(125, slRace.anomalousShield, false) },
-                { 2, RaceData.regeneratingAloys = new RegeneratingAloys(100, slRace.regeneratingAloys, false) },
-                { 3, RaceData.secondaryProcessing = new SecondaryProcessing(100, slRace.secondaryProcessing, false) },
-                { 4, RaceData.secretWarehouses = new SecretWarehouses(100, slRace.secretWarehouses, false) },
-                { 5, RaceData.localResearch = new LocalResearch(200, slRace.localResearch, false) },
-                { 6, RaceData.pocketDimension = new PocketDimension(150, slRace.pocketDimension, false) },
-                { 7, RaceData.anomalousRadioReceiver = new AnomalousRadioReceiver(400, slRace.anomalousRadioReceiver, true) },
-                { 8, RaceData.reverseTimeClock = new ReverseTimeClock(600, slRace.reverseTimeClock, true) },
-                { 9, RaceData.schrodingerHat = new SchrodingerHat(800, slRace.schrodingerHat, true) },
-                { 10, RaceData.studyOfGameTheory = new StudyOfGameTheory(150, slRace.studyOfGameTheory, false) }
+                { 0, new EternalRepair(this, 100, slRace.eternalRepair, false) },
+                { 1, new AnomalousShield(this, 125, slRace.anomalousShield, false) },
+                { 2, new RegeneratingAloys(this, 100, slRace.regeneratingAloys, false) },
+                { 3, new SecondaryProcessing(this, 100, slRace.secondaryProcessing, false) },
+                { 4, new SecretWarehouses(this, 100, slRace.secretWarehouses, false) },
+                { 5, new LocalResearch(this, 200, slRace.localResearch, false) },
+                { 6, new PocketDimension(this, 150, slRace.pocketDimension, false) },
+                { 7, new AnomalousRadioReceiver(this, 400, slRace.anomalousRadioReceiver, true) },
+                { 8, new ReverseTimeClock(this, 600, slRace.reverseTimeClock, true) },
+                { 9, new SchrodingerHat(this, 800, slRace.schrodingerHat, true) },
+                { 10, new StudyOfGameTheory(this, 150, slRace.studyOfGameTheory, false) }
             };
         }
-        slRace.SaveRace(RaceData);
+        SaveRace();
     }
     private void Update()
     {
@@ -144,35 +141,37 @@ public class RaceController : MonoBehaviour
                 if (_cycle.RaceData.IsAvoidDeath == 1 && _cycle.CycleData.cycleNum < 50)
                 {
                     _cycle.RaceData.IsAvoidDeath = 0;
-                    shelter.SetShelter(RaceData.MaxHp, shelter.MaxHP / 2);
+                    shelter.SetShelter(shelter.MaxHP, shelter.MaxHP / 2);
                 }
-                else LoseRace();
+                else ui.RaceOver();
             }
         }
+        if(Input.GetKeyDown(KeyCode.Escape)) Debug.Log(RaceData.MaxHpFactor);
     }
 
     public void UpgradeProgress(int t)
     {
-        Debug.Log(_progressList[t]);
-        _progressList[t].UpgradeProgress();
+        RaceData._progressList[t].UpgradeProgress();
     }
 
-    public void LoseRace()
+    public void LoseRace(int fragmentFactor)
     {
         if (_cycle.CycleData.cycleNum > RaceData.BestRace) RaceData.BestRace = _cycle.CycleData.cycleNum;
         if(timeReader.IsRacing()) timeReader.InverseRace();
-        RaceData.PepperFragments += (int)(_cycle.CycleData.cycleNum * 5 + _cycle.CycleData.allPepper * 0.1f);
+        RaceData.PepperFragments += fragmentFactor * (int)(_cycle.CycleData.cycleNum * 5 + _cycle.CycleData.allPepper * 0.1f);
         _cycle.Final(); 
         RaceData.IsRace = 0;
         SaveRace();
+        ui.RaceExit();
     }
     public void StartRace()
     {
         if (!timeReader.IsRacing())
         {
-            timeReader.InverseRace();
             if (_cycleController != null) Destroy(_cycleController);
             RaceData.RaceNum++;
+            SaveRace();
+            
             _cycleController = Instantiate(_cycleControllerPrefab, transform);
             _cycle = _cycleController.GetComponent<CycleComponent>();
             shelter = _cycleController.GetComponent<Shelter>();
@@ -184,6 +183,9 @@ public class RaceController : MonoBehaviour
             _shelterView.GetShelter(_cycleController.GetComponent<Shelter>());
             ui.SetUI(_cycle);
             ui.StartGame();
+            
+            RaceData.IsRace = 1;
+            SaveRace();
         }
     }
 }

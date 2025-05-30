@@ -27,6 +27,8 @@ public class CycleTimeReader: MonoBehaviour
         if (isRacing)
         {
             isRacing = false;
+            StopCoroutine(GoToDay());
+            StopCoroutine(GoToNight());
             OnRacingClose?.Invoke();
         }
         else

@@ -8,13 +8,13 @@ public class Boer : BaseUpgrader
 
     public override void Upgrade()
     {
-        if (count == 1) cycle.NewDayBase(0.5f);
-        else cycle.NewDayBase(0.25f);
+        if (count == 1) cycle.NewDayBase(0.25f);
+        else cycle.NewDayBase(0.125f);
     }
 
     public override void Worse()
     {
-        if (count == 0) cycle.NewDayBase(-0.5f);
-        else cycle.NewDayBase(-0.25f);
+        if (count == 0) cycle.NewDayBase(-0.25f);
+        else cycle.NewDayBase(-0.125f);
     }
 }

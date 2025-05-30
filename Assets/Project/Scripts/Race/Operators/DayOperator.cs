@@ -16,9 +16,8 @@ public class DayOperator : Operator
     {
         storage = transform.parent.GetComponent<PepperStorage>();
         shelter = transform.parent.GetComponent<Shelter>();
+        ui_controller = transform.parent.parent.GetComponent<RaceController>().ui;
         _camera = Camera.main;
-        
-        shelter.transform.parent.GetComponent<RaceController>().SaveRace();
     }
     void Update()
     {

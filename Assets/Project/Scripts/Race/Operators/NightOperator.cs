@@ -11,6 +11,10 @@ public class NightOperator : Operator
     [SerializeField] private float bidRange = 0;
     private Disaster disaster, bidDisaster;
     private Dictionary<int, Disaster> _nightDisasters;
+
+    private float lastHP, diffHP, lastPeppers, diffPeppers;
+    public int DiffHP => (int)diffHP;
+    public int DiffPeppers => (int)diffPeppers;
     
     public void SetOperator(float range) => damage = range;
 
@@ -45,12 +49,12 @@ public class NightOperator : Operator
         if (cycle.CycleData.cycleNum % 5 != 0) bidDisaster = _nightDisasters[type];
         else bidDisaster = _nightDisasters[type + 5];
     }
-    public void Bid()
+    public void Bid(int bidSize)
     {
         if (bidDisaster != null)
         {
-            bidRange = storage.PepperCount / 2.0f;
-            storage.SpendPepper(bidRange);
+            bidRange = bidSize;
+            storage.SpendPepper(bidSize);
             isBid = true;
         }
     }
@@ -77,7 +81,12 @@ public class NightOperator : Operator
     }
     public void StartDisaster(int disasterNum)
     {
+        lastHP = shelter.HP;
+        lastPeppers = storage.PepperCount;
         disaster.OpenDisaster();
+        diffHP = lastHP - shelter.HP;
+        diffPeppers = lastPeppers - storage.PepperCount;
+            
         cycle.CycleData.lastDisaster = disasterNum;
         if (isBid)
         {

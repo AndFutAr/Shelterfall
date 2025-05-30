@@ -81,10 +81,9 @@ public class PepperView : MonoBehaviour
 
     private void ChangeText(float count)
     {
-        
         _viewedCount = count;
-        if (count * 100 % 10 != 0) _pepperText.text = $"{count}";
-        else if (count * 10 % 10 != 0) _pepperText.text = $"{count}0";
-        else _pepperText.text = $"{count},00";
+        if (count * 100 % 10 != 0) _pepperText.text = count.ToString();
+        else if (count * 10 % 10 != 0) _pepperText.text = count + "0";
+        else _pepperText.text = count + ",00";
     }
 }

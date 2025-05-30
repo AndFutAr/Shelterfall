@@ -3,11 +3,15 @@ public abstract class Progress
 {
     public RaceController controller;
     protected int price, startPrice, count = 0;
-    public int Count => count;
     protected bool isOneTime;
     
-    public Progress(int _startPrice, int _count, bool _isOneTime)
+    public int Count => count;
+    public int Price => price;
+    public bool IsOneTime => isOneTime;
+    
+    public Progress(RaceController _controller, int _startPrice, int _count, bool _isOneTime)
     {
+        controller = _controller;
         startPrice = _startPrice;
         count = _count;
         price = startPrice;
@@ -20,6 +24,7 @@ public abstract class Progress
         {
             if (!isOneTime || (isOneTime && count == 0))
             {
+                controller.RaceData.PepperFragments -= price;
                 count++;
                 price = startPrice;
                 for(int i = 0; i < count; i++) price *= 2;

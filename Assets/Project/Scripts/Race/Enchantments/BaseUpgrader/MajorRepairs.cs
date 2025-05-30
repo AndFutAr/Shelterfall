@@ -6,7 +6,7 @@ public class MajorRepairs : BaseUpgrader
 
     public override void Upgrade()
     {
-        shelter.HealHP(0.3f);
+        shelter.HealHP(0.2f);
     }
 
     public override void Worse() { }

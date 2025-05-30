@@ -8,13 +8,13 @@ public class QualityMaterials : BaseUpgrader
 
     public override void Upgrade()
     {
-        if (count == 1) shelter.PlusHP(0.2f * cycle.RaceData.MaxHpFactor);
-        else shelter.PlusHP(0.1f * cycle.RaceData.MaxHpFactor);
+        if (count == 1) shelter.PlusHP(10 * cycle.RaceData.MaxHpFactor);
+        else shelter.PlusHP(5 * cycle.RaceData.MaxHpFactor);
     }
 
     public override void Worse()
     {
-        if(count == 0) shelter.PlusHP(-0.2f * cycle.RaceData.MaxHpFactor);
-        else shelter.PlusHP(-0.1f * cycle.RaceData.MaxHpFactor);
+        if(count == 0) shelter.PlusHP(-10 * cycle.RaceData.MaxHpFactor);
+        else shelter.PlusHP(-5 * cycle.RaceData.MaxHpFactor);
     }
 }

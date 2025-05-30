@@ -6,13 +6,13 @@ public class RepairRobots : BaseUpgrader
 
     public override void Upgrade()
     {
-        if(count == 1) cycle.PlusHeal(0.1f);
-        else cycle.PlusHeal(0.05f);
+        if(count == 1) cycle.PlusHeal(0.03f);
+        else cycle.PlusHeal(0.015f);
     }
 
     public override void Worse()
     {
-        if(count == 0) cycle.PlusHeal(-0.1f);
-        else cycle.PlusHeal(-0.05f);
+        if(count == 0) cycle.PlusHeal(-0.03f);
+        else cycle.PlusHeal(-0.015f);
     }
 }

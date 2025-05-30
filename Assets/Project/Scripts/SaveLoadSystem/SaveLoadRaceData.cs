@@ -5,6 +5,7 @@ public class SaveLoadRaceData
 {
     public int returner;
 
+    public float SoundVolume;
     public int BestRace;
     public int RaceNum;
     public int PepperFragments;
@@ -41,6 +42,7 @@ public class SaveLoadRaceData
 
     public void SaveRace(RaceData data)
     {
+        PlayerPrefs.SetFloat("SoundVolume", data.SoundVolume);
         PlayerPrefs.SetInt("BestRace", data.BestRace);
         PlayerPrefs.SetInt("RaceNum", data.RaceNum);
         PlayerPrefs.SetInt("PepperFragments", data.PepperFragments);
@@ -61,25 +63,26 @@ public class SaveLoadRaceData
         PlayerPrefs.SetInt("IsAvoidDeath", data.IsAvoidDeath);
         PlayerPrefs.SetFloat("ChanceAvoidLossBid", data.ChanceAvoidLossBid);
         
-        PlayerPrefs.SetInt("eternalRepair", data.eternalRepair.Count);
-        PlayerPrefs.SetInt("anomalousShield", data.anomalousShield.Count);
-        PlayerPrefs.SetInt("regeneratingAloys", data.regeneratingAloys.Count);
+        PlayerPrefs.SetInt("eternalRepair", data._progressList[0].Count);
+        PlayerPrefs.SetInt("anomalousShield", data._progressList[1].Count);
+        PlayerPrefs.SetInt("regeneratingAloys", data._progressList[2].Count);
         
-        PlayerPrefs.SetInt("secondaryProcessing", data.secondaryProcessing.Count);
-        PlayerPrefs.SetInt("secretWarehouses", data.secretWarehouses.Count);
-        PlayerPrefs.SetInt("localResearch", data.localResearch.Count);
-        PlayerPrefs.SetInt("pocketDimension", data.pocketDimension.Count);
+        PlayerPrefs.SetInt("secondaryProcessing", data._progressList[3].Count);
+        PlayerPrefs.SetInt("secretWarehouses", data._progressList[4].Count);
+        PlayerPrefs.SetInt("localResearch", data._progressList[5].Count);
+        PlayerPrefs.SetInt("pocketDimension", data._progressList[6].Count);
         
-        PlayerPrefs.SetInt("anomalousRadioReceiver", data. anomalousRadioReceiver.Count);
-        PlayerPrefs.SetInt("reverseTimeClock", data.reverseTimeClock.Count);
-        PlayerPrefs.SetInt("schrodingerHat", data.schrodingerHat.Count);
-        PlayerPrefs.SetInt("studyOfGameTheory", data.studyOfGameTheory.Count);
+        PlayerPrefs.SetInt("anomalousRadioReceiver", data._progressList[7].Count);
+        PlayerPrefs.SetInt("reverseTimeClock", data._progressList[8].Count);
+        PlayerPrefs.SetInt("schrodingerHat", data._progressList[9].Count);
+        PlayerPrefs.SetInt("studyOfGameTheory", data._progressList[10].Count);
     }
 
     public int LoadRace()
     {
         if (!PlayerPrefs.HasKey("RaceNum")) return 0;
         
+        SoundVolume = PlayerPrefs.GetFloat("SoundVolume");
         BestRace = PlayerPrefs.GetInt("BestRace");
         RaceNum = PlayerPrefs.GetInt("RaceNum");
         PepperFragments = PlayerPrefs.GetInt("PepperFragments");

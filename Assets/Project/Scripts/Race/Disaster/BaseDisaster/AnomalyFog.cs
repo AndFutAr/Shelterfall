@@ -11,6 +11,6 @@
     {
         cycle.ResetTime();
         cycle.SetDayRange2(0.6f);
-        shelter.HealHP(0.1f);
+        shelter.HealHP(0.05f);
     }
 }
