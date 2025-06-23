@@ -6,9 +6,10 @@ using Random = UnityEngine.Random;
 
 public class NightOperator : Operator
 {
+    private UI_Controller uiController;
     private float damage;
     [SerializeField] private bool isBid = false;
-    [SerializeField] private float bidRange = 0;
+    [SerializeField] private int bidRange = 0;
     private Disaster disaster, bidDisaster;
     private Dictionary<int, Disaster> _nightDisasters;
 
@@ -18,11 +19,26 @@ public class NightOperator : Operator
     
     public void SetOperator(float range) => damage = range;
 
+    private int lostDefender = -1, lostDefEl = -1;
+    public int LostDefender
+    {
+        get => lostDefender;
+        set => lostDefender = value;
+    }
+    public int LostDefEl
+    {
+        get => lostDefEl;
+        set => lostDefEl = value;
+    }
+
     void Awake()
     {
         cycle = transform.parent.GetComponent<CycleComponent>();
         storage = transform.parent.GetComponent<PepperStorage>();
         shelter = transform.parent.GetComponent<Shelter>();
+        
+        lostDefender = -1;
+        lostDefEl = -1;
     }
     private void Start()
     {
@@ -49,17 +65,18 @@ public class NightOperator : Operator
         if (cycle.CycleData.cycleNum % 5 != 0) bidDisaster = _nightDisasters[type];
         else bidDisaster = _nightDisasters[type + 5];
     }
-    public void Bid(int bidSize)
+    public void Bid(int bidSize, UI_Controller ui)
     {
         if (bidDisaster != null)
         {
             bidRange = bidSize;
             storage.SpendPepper(bidSize);
             isBid = true;
+            uiController = ui;
         }
     }
     public void BidCount() =>
-        storage.AddPepper(bidRange * 2.0f);
+        storage.AddPepper(bidRange * 3.0f);
 
     public void ReturnBid() =>
         storage.AddPepper(bidRange);
@@ -94,6 +111,7 @@ public class NightOperator : Operator
             {
                 BidCount(); 
                 Debug.Log("you win");
+                uiController.GetPrise(bidRange * 3);
             }
             else
             {
@@ -103,7 +121,9 @@ public class NightOperator : Operator
                 {
                     Debug.Log("return");
                     ReturnBid();
+                    uiController.GetReturn();
                 }
+                else uiController.GetLose(bidRange);
             }
         }
     }

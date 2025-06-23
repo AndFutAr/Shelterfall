@@ -138,7 +138,8 @@ public class RaceController : MonoBehaviour
         {
             if ((shelter.HP <= 0 || _cycle.CycleData.cycleNum >= 50) && timeReader.IsNight())
             {
-                if (_cycle.RaceData.IsAvoidDeath == 1 && _cycle.CycleData.cycleNum < 50)
+                if (_cycle.CycleData.cycleNum >= 50) ui.RaceWin();
+                else if (_cycle.RaceData.IsAvoidDeath == 1 && _cycle.CycleData.cycleNum < 50)
                 {
                     _cycle.RaceData.IsAvoidDeath = 0;
                     shelter.SetShelter(shelter.MaxHP, shelter.MaxHP / 2);

@@ -10,7 +10,7 @@ public class Earthquake : Disaster
         rangeMaxHP = 0.1f;
         rangeTreft = 0.1f;
     }
-    public override void Special()
+    public override void Special() 
     {
         cycle.ResetTime();
         int defenderNum = 0, count = 0;
@@ -28,7 +28,9 @@ public class Earthquake : Disaster
             int chance = UnityEngine.Random.Range(0, 60);
             defenderNum = chance / 10;
         }
-
+        
         cycle.CycleData._BaseDictionaries[defenderNum].LowerUpgrader();
+
+        cycle.transform.GetChild(0).GetComponent<NightOperator>().LostDefender = defenderNum;
     }
 }

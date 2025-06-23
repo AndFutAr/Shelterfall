@@ -41,5 +41,8 @@
             defenderElNum = chanceEl / 10;
         }
         cycle.CycleData._ElDictionaries[defenderElNum].LowerUpgrader();
+        
+        cycle.transform.GetChild(0).GetComponent<NightOperator>().LostDefender = defenderNum;
+        cycle.transform.GetChild(0).GetComponent<NightOperator>().LostDefEl = defenderElNum;
     }
 }

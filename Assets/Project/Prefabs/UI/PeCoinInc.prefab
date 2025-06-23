@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 4985946167751613987}
   - component: {fileID: 5116974233642856916}
   - component: {fileID: 3026009053735642921}
+  - component: {fileID: 1529908734382365857}
   m_Layer: 5
   m_Name: PeCoinInc
   m_TagString: Untagged
@@ -210,3 +211,15 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1529908734382365857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8248475340647951283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa2f37063dba71d469e81b9144f6984d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

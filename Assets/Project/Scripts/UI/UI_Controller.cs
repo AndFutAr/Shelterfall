@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class UI_Controller : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class UI_Controller : MonoBehaviour
     public CycleComponent cycle;
     public Camera camera, startCamera;
 
-    [SerializeField] private GameObject startMenu, gameMenu, setMenu, progressMenu, raceOverMenu, lastMenu, enchantmentMenu;
+    [SerializeField] private GameObject startMenu, gameMenu, setMenu, progressMenu, raceOverMenu, raceWinMenu, lastMenu, enchantmentMenu;
 
     private bool isEnchant = false, isUsed = false;
     [SerializeField] private GameObject dayUI, eveningUI, nightUI, windowUI, baseEnchantsMenu, elEnchantsMenu;
@@ -31,11 +32,16 @@ public class UI_Controller : MonoBehaviour
     [SerializeField] private Slider soundSlider;
     [SerializeField] private AudioSource[] sounds;
     public float SoundVolume => soundSlider.value;
-    
-    [SerializeField] private TMP_Text ResultDaysText, ResultPeppersText, RewardFragmentsText;
+
+    [SerializeField] private TMP_Text ResultDaysText, ResultPeppersText, RewardFragmentsText1;
+    [SerializeField] private TMP_Text WinPeppersText, RewardFragmentsText2;
     private int fragmentFactor = 1;
+    [SerializeField] private TMP_Text lostDefenderText1, lostDefenderText2, lostDefElText;
     
     [SerializeField] private GameObject PeCoinInc;
+    private float timeCLick = 0;
+    private bool isClick = false;
+    [SerializeField] private GameObject clickText1, clickText2;
     
     [SerializeField] private GameObject rerollBase, rerollElement, getCardsButton;
     [SerializeField] private TMP_Text bidDisText, bidSizeText;
@@ -48,6 +54,8 @@ public class UI_Controller : MonoBehaviour
     [SerializeField] private GameObject rollDis, rerollDis, makeBidBut, notMakeBidBut;
     [SerializeField] private GameObject bidButtons;
     [SerializeField] private GameObject[] _nightResults = new GameObject[10];
+    [SerializeField] private GameObject bidWinIcon, bidLoseIcon, bidReturnIcon;
+    [SerializeField] private TMP_Text bidWinText, bidLoseText;
     int disasterNum = 10;
 
     [SerializeField] private GameObject canvas;
@@ -91,6 +99,24 @@ public class UI_Controller : MonoBehaviour
         bestScore.text = controller.RaceData.BestRace.ToString();
         fragmentText.text = controller.RaceData.PepperFragments.ToString();
         for(int i = 0; i < 5; i++) sounds[i].volume = soundSlider.value;
+        
+        timeCLick += Time.deltaTime;
+        if (timeCLick >= 1)
+        {
+            clickText1.SetActive(true);
+            clickText2.SetActive(true);
+            if (!isClick)
+            {
+                isClick = true;
+                StartCoroutine(ClickText());
+            }
+        }
+        else
+        {
+            isClick = false;
+            clickText1.SetActive(false);
+            clickText2.SetActive(false);
+        }
     }
 
     public void GetUpgraders(GameObject but)
@@ -204,22 +230,44 @@ public class UI_Controller : MonoBehaviour
     }
     public void IncreasePepCoin(float count, Vector3 mousePosition)
     {
+        timeCLick = 0;
         GameObject PeCoin = Instantiate(PeCoinInc, mousePosition, PeCoinInc.transform.rotation);
-        PeCoin.transform.GetComponent<TextMeshPro>().text = "+" + count;
+        PeCoin.transform.GetComponent<TMP_Text>().text = "+" + count;
         PeCoin.transform.parent = canvas.transform;
         PeCoin.transform.position = mousePosition;
     }
 
+    IEnumerator ClickText()
+    {
+        while(timeCLick >= 1)
+        {
+            yield return new WaitForSeconds(0.3f);
+            clickText1.transform.DOScale(new Vector3(1.3f, 1.3f, 1.3f), 0.5f);
+            clickText2.transform.DOScale(new Vector3(1.3f, 1.3f, 1.3f), 0.5f);
+            yield return new WaitForSeconds(0.3f);
+            clickText1.transform.DOScale(new Vector3(1f, 1f, 1f), 0.5f);
+            clickText2.transform.DOScale(new Vector3(1f, 1f, 1f), 0.5f);
+        }
+    }
+
     public void RaceOver()
     {
-        if(!isEnchant) if(!isUsed) StartCoroutine(FinalRace());
+        if(!isEnchant) if(!isUsed) StartCoroutine(FinalRace(raceOverMenu));
         ResultDaysText.text = cycle.CycleData.cycleNum.ToString();
         ResultPeppersText.text = ((int)cycle.CycleData.allPepper).ToString();
-        RewardFragmentsText.text =
+        RewardFragmentsText1.text =
             (fragmentFactor * (int)(cycle.CycleData.cycleNum * 5 + cycle.CycleData.allPepper * 0.1f)).ToString();
-        allFragText.text = controller.RaceData.PepperFragments + " (+" +  RewardFragmentsText.text + ") осколков";
+        allFragText.text = controller.RaceData.PepperFragments + " (+" +  RewardFragmentsText1.text + ") осколков";
     }
-    IEnumerator FinalRace()
+    public void RaceWin()
+    {
+        if(!isEnchant) if(!isUsed) StartCoroutine(FinalRace(raceWinMenu));
+        WinPeppersText.text = ((int)cycle.CycleData.allPepper).ToString();
+        RewardFragmentsText2.text =
+            (fragmentFactor * (int)(cycle.CycleData.cycleNum * 5 + cycle.CycleData.allPepper * 0.1f)).ToString();
+        allFragText.text = controller.RaceData.PepperFragments + " (+" +  RewardFragmentsText2.text + ") осколков";
+    }
+    IEnumerator FinalRace(GameObject finalMenu)
     {
         isEnchant = true;
         isUsed = true;
@@ -227,9 +275,9 @@ public class UI_Controller : MonoBehaviour
         gameMenu.transform.DOLocalMove(new Vector3(0, 1080, 0), 0.5f);
         yield return new WaitForSeconds(0.5f);
         gameMenu.SetActive(false);
-        raceOverMenu.SetActive(true);
-        raceOverMenu.transform.localPosition = new Vector3(0, 1080, 0);
-        raceOverMenu.transform.DOLocalMove(new Vector3(0, 0, 0), 0.5f);
+        finalMenu.SetActive(true);
+        finalMenu.transform.localPosition = new Vector3(0, 1080, 0);
+        finalMenu.transform.DOLocalMove(new Vector3(0, 0, 0), 0.5f);
         yield return new WaitForSeconds(0.5f);
         isUsed = false;
     }
@@ -237,9 +285,9 @@ public class UI_Controller : MonoBehaviour
     {
         button.SetActive(false);
         fragmentFactor = 2;
-        RewardFragmentsText.text =
+        RewardFragmentsText1.text =
             (fragmentFactor * (int)(cycle.CycleData.cycleNum * 5 + cycle.CycleData.allPepper * 0.1f)).ToString();
-        allFragText.text = controller.RaceData.PepperFragments + " (+" +  RewardFragmentsText.text + ") осколков";
+        allFragText.text = controller.RaceData.PepperFragments + " (+" +  RewardFragmentsText1.text + ") осколков";
     }
     public void CloseGame() => controller.LoseRace(fragmentFactor);
     public void ReturnInGame(GameObject buttonsMenu)
@@ -292,6 +340,9 @@ public class UI_Controller : MonoBehaviour
     public void StartNight() => StartCoroutine(NightStart());
     IEnumerator DayStart()
     {
+        bidWinIcon.SetActive(false);
+        bidLoseIcon.SetActive(false);
+        bidReturnIcon.SetActive(false);
         windowUI.SetActive(true);
         lightning.transform.rotation = Quaternion.Euler(-90, 30, 0);
         for(int i = 0; i < 10; i++) _nightResults[i].SetActive(false);
@@ -393,7 +444,7 @@ public class UI_Controller : MonoBehaviour
             makeBidBut.SetActive(false);
             notMakeBidBut.SetActive(false);
             rollDis.SetActive(true);
-            cycle.transform.GetChild(0).GetComponent<NightOperator>().Bid(bidSize);
+            cycle.transform.GetChild(0).GetComponent<NightOperator>().Bid(bidSize, this);
             for (int i = 0; i < 5; i++) bidButtons.SetActive(false);
         }
     }
@@ -457,8 +508,8 @@ public class UI_Controller : MonoBehaviour
             _nightResults[disasterNum].SetActive(true);
             _nightResults[disasterNum].transform.GetChild(0).GetComponent<TMP_Text>().text = 
                 cycle.transform.GetChild(0).GetComponent<NightOperator>().DiffHP.ToString();
-            _nightResults[disasterNum].transform.GetChild(1).GetComponent<TMP_Text>().text = 
-                            cycle.transform.GetChild(0).GetComponent<NightOperator>().DiffPeppers.ToString();
+            _nightResults[disasterNum].transform.GetChild(1).GetComponent<TMP_Text>().text =
+                cycle.transform.GetChild(0).GetComponent<NightOperator>().DiffPeppers.ToString();
         }
         else
         {
@@ -468,6 +519,69 @@ public class UI_Controller : MonoBehaviour
             _nightResults[disasterNum + 5].transform.GetChild(1).GetComponent<TMP_Text>().text = 
                 cycle.transform.GetChild(0).GetComponent<NightOperator>().DiffPeppers.ToString();
         }
+        if (disasterNum == 1)
+        {
+            string defName = "", defElName = "";
+            switch(cycle.transform.GetChild(0).GetComponent<NightOperator>().LostDefender)
+            {
+                case 0: defName = "качества материалов"; break;
+                case 1: defName = "роботов механников"; break;
+                case 2: defName = "бура"; break;
+                case 3: defName = "искуственного солнца"; break;
+                case 4: defName = "нужных людей"; break;
+                case 5: defName = "капитального ремонта"; break;
+            }
+            switch (cycle.transform.GetChild(0).GetComponent<NightOperator>().LostDefEl)
+            {
+                case 0: defElName = "щита от метеоритов"; break;
+                case 1: defElName = "антисейсмопокрытия"; break;
+                case 2: defElName = "энергетического буфера"; break;
+                case 3: defElName = "кибер-иммунитета"; break;
+                case 4: defElName = "адаптивного маяка"; break;
+            }
+            lostDefenderText1.text = "У вас сбрасывается 1 уровень " + defName;
+            lostDefenderText2.text = "У вас сбрасывается 1 уровень " + defName;
+            lostDefElText.text = "У вас сбрасывается 1 уровень " + defElName;
+        }
+        
         isUsed = false;
+    }
+    public void GetPrise(int bidSize)
+    {
+        StartCoroutine(Prise(bidSize));
+    }
+    IEnumerator Prise(int bidSize)
+    {
+        yield return new WaitForSeconds(0.1f);
+        bidWinIcon.transform.localPosition = new Vector3(0, 0, 0);
+        bidWinIcon.SetActive(true);
+        bidWinText.text = bidSize.ToString();
+        bidWinIcon.transform.DOLocalMove(new Vector3(0, 327, 0), 1);
+        yield return new WaitForSeconds(1f);
+    }
+    public void GetLose(int bidSize)
+    {
+        StartCoroutine(Lose(bidSize));
+    }
+    IEnumerator Lose(int bidSize)
+    {
+        yield return new WaitForSeconds(0.1f);
+        bidLoseIcon.transform.localPosition = new Vector3(0, 0, 0);
+        bidLoseIcon.SetActive(true);
+        bidLoseText.text = bidSize.ToString();
+        bidLoseIcon.transform.DOLocalMove(new Vector3(0, 327, 0), 1);
+        yield return new WaitForSeconds(1f);
+    }
+    public void GetReturn()
+    {
+        StartCoroutine(Return());
+    }
+    IEnumerator Return()
+    {
+        yield return new WaitForSeconds(0.1f);
+        bidReturnIcon.transform.localPosition = new Vector3(0, 0, 0);
+        bidReturnIcon.SetActive(true);
+        bidReturnIcon.transform.DOLocalMove(new Vector3(0, 327, 0), 1);
+        yield return new WaitForSeconds(1f);
     }
 }

@@ -34,6 +34,7 @@ public class DayOperator : Operator
                     if (chance <= chancePepper * 100)
                     {
                         storage.AddPepper(pepperPerClick);
+                        ui_controller.IncreasePepCoin(pepperPerClick, Input.mousePosition);
                     }
                 }
             }
