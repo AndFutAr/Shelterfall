@@ -467,6 +467,8 @@ public class UI_Controller : MonoBehaviour
             disasterNum = chance / 20;
         }
 
+        disasterNum = 0;
+
         StartCoroutine(WheelRotate(disasterNum));
         cycle.transform.GetChild(0).GetComponent<NightOperator>().SpinTheWheel(disasterNum);
         if (cycle.CycleData.cycleNum % 5 != 0 && cycle.RaceData.IsRerollDef == 1) StartCoroutine(RespinSpawn());
