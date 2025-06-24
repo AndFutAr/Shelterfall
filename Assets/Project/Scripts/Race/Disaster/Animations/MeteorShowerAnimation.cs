@@ -28,14 +28,14 @@ namespace Project.Scripts.Race.Disaster.Animations
             yield return new WaitForSeconds(0.55f);
             _lavaExplosion3.gameObject.SetActive(true);
             _lavaExplosion3.Play();
-            yield return new WaitForSeconds(0.15f);
+            yield return new WaitForSeconds(1.15f);
             _lavaExplosion4.gameObject.SetActive(true);
             _lavaExplosion4.Play();
             _camera.DOShakePosition(0.25f, Vector3.one * 3.5f);
             yield return new WaitForSeconds(0.25f);
             _lavaExplosion5.gameObject.SetActive(true);
             _lavaExplosion5.Play();
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(2.5f);
             _lavaStream.Stop();
             
             HideParticles();
