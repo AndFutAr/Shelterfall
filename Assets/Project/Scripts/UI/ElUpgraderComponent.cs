@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
@@ -40,8 +42,13 @@ public class ElUpgraderComponent : MonoBehaviour, IPointerEnterHandler, IPointer
         {
             isClicked = true;
             _elUpgrader.IncreaseUpgrader();
+            StartCoroutine(BuyUpgrade());
         }
     }
-
+    IEnumerator BuyUpgrade()
+    {
+        yield return new WaitForSeconds(0.1f);
+        transform.DOLocalMove(new Vector3(transform.localPosition.x, -700, transform.localPosition.z), 0.7f);
+    }
     public void OnPointerExit(PointerEventData eventData) => UpgraderInfo.SetActive(false);
 }
