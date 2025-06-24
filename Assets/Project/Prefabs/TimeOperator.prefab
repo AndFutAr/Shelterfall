@@ -49,7 +49,9 @@ MonoBehaviour:
   cycle: {fileID: 0}
   storage: {fileID: 0}
   shelter: {fileID: 0}
+  ui_controller: {fileID: 0}
   _camera: {fileID: 0}
+  _clickImpactPrefab: {fileID: 4923453282351949629, guid: b362c387d06487e4a8ee36fc7bb581f7, type: 3}
   pepperPerClick: 1
   chancePepper: 1
 --- !u!114 &8442557351218294901
@@ -67,6 +69,7 @@ MonoBehaviour:
   cycle: {fileID: 0}
   storage: {fileID: 0}
   shelter: {fileID: 0}
+  ui_controller: {fileID: 0}
   twistsBase: 1
   twistsElement: 1
   Base1Ind: 0
@@ -107,5 +110,6 @@ MonoBehaviour:
   cycle: {fileID: 0}
   storage: {fileID: 0}
   shelter: {fileID: 0}
+  ui_controller: {fileID: 0}
   isBid: 0
   bidRange: 0
