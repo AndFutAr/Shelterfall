@@ -95,6 +95,8 @@ public class NightOperator : Operator
     {
         yield return new WaitForSeconds(4);
         StartDisaster(disasterNum);
+        
+        // play particles
     }
     public void StartDisaster(int disasterNum)
     {
