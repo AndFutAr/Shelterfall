@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Cinemachine;
 using DG.Tweening;
@@ -7,6 +8,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class UI_Controller : MonoBehaviour
 {
@@ -62,6 +64,8 @@ public class UI_Controller : MonoBehaviour
     
     [SerializeField] private GameObject ProgressionIcon;
     [SerializeField] private TMP_Text fragmentText, allFragText;
+    
+    [SerializeField] private ParticleSystem _deathCataclysmParticle;
     
     public GameObject Canvas() => canvas;
 
@@ -469,13 +473,18 @@ public class UI_Controller : MonoBehaviour
 
         disasterNum = 1;
 
-        StartCoroutine(WheelRotate(disasterNum));
+        StartCoroutine(WheelRotate(disasterNum, OnCompleteSpinWheel));
+    }
+
+    private void OnCompleteSpinWheel()
+    {
         cycle.transform.GetChild(0).GetComponent<NightOperator>().SpinTheWheel(disasterNum);
         if (cycle.CycleData.cycleNum % 5 != 0 && cycle.RaceData.IsRerollDef == 1) StartCoroutine(RespinSpawn());
         else if (cycle.CycleData.cycleNum % 5 == 0 && cycle.RaceData.IsRerollBoss == 1) StartCoroutine(RespinSpawn());
         else StartCoroutine(NightResult(disasterNum));
     }
-    IEnumerator WheelRotate(int disasterNum)
+
+    IEnumerator WheelRotate(int disasterNum, Action onCompleteSpinWheel)
     {
         int countRounds = Random.Range(2, 3);
         int minDegree = 0, maxDegree = 0;
@@ -509,6 +518,13 @@ public class UI_Controller : MonoBehaviour
             baseWheel.transform.DOLocalRotateQuaternion
                 (Quaternion.Euler(180, currentDegree, 0), 4f);
             yield return new WaitForSeconds(4f);
+            
+            _deathCataclysmParticle.gameObject.SetActive(true);
+            _deathCataclysmParticle.Play();
+            yield return new WaitForSeconds(0.45f);
+            _deathCataclysmParticle.gameObject.SetActive(false);
+            
+            onCompleteSpinWheel?.Invoke();
         }
         else
         {
@@ -539,7 +555,15 @@ public class UI_Controller : MonoBehaviour
             currentDegree = (Random.Range(minDegree, maxDegree) + 360 * countRounds);
             bossWheel.transform.DOLocalRotateQuaternion
                 (Quaternion.Euler(180, currentDegree, 0), 4f);
+            
             yield return new WaitForSeconds(4f);
+
+            _deathCataclysmParticle.gameObject.SetActive(true);
+            _deathCataclysmParticle.Play();
+            yield return new WaitForSeconds(0.45f);
+            _deathCataclysmParticle.gameObject.SetActive(false);
+            
+            onCompleteSpinWheel?.Invoke();
         }
     }
     public void RespinWheel()
