@@ -126,12 +126,12 @@ public class UI_Controller : MonoBehaviour
     }
     public void RerollBase()
     {
-        cycle.transform.GetChild(0).GetComponent<EveningOperator>().RerollBase(false);
+        cycle.transform.GetChild(0).GetComponent<EveningOperator>().RerollB(false);
         if(cycle.transform.GetChild(0).GetComponent<EveningOperator>().TwistsBase <= 0) rerollBase.SetActive(false);
     }
     public void RerollElement()
     {
-        cycle.transform.GetChild(0).GetComponent<EveningOperator>().RerollElement(false);
+        cycle.transform.GetChild(0).GetComponent<EveningOperator>().RerollEl(false);
         if(cycle.transform.GetChild(0).GetComponent<EveningOperator>().TwistsElement <= 0) rerollElement.SetActive(false);
     }
 
