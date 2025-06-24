@@ -32986,6 +32986,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 112860299574193686, guid: 3d3f3b2c4c1ccd74eb93eccfbb15dde2, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1987836695340234562, guid: 3d3f3b2c4c1ccd74eb93eccfbb15dde2, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2329281035416443979, guid: 3d3f3b2c4c1ccd74eb93eccfbb15dde2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.69607365
@@ -33024,6 +33032,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2329281035416443979, guid: 3d3f3b2c4c1ccd74eb93eccfbb15dde2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2651004089930953970, guid: 3d3f3b2c4c1ccd74eb93eccfbb15dde2, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3071938360557464865, guid: 3d3f3b2c4c1ccd74eb93eccfbb15dde2, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7603811702861617189, guid: 3d3f3b2c4c1ccd74eb93eccfbb15dde2, type: 3}
+      propertyPath: playOnAwake
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8472618377307371110, guid: 3d3f3b2c4c1ccd74eb93eccfbb15dde2, type: 3}
