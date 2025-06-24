@@ -45,9 +45,7 @@ public class UI_Controller : MonoBehaviour
     
     [SerializeField] private GameObject rerollBase, rerollElement, getCardsButton;
     [SerializeField] private TMP_Text bidDisText, bidSizeText;
-    [SerializeField] private GameObject wheel;
-    [SerializeField] private Animation baseWheelAnim, bossWheelAnim;
-    [SerializeField] private AnimationClip[] baseWheelAnimClips, bossWheelAnimClips;
+    [SerializeField] private GameObject wheel, baseWheel, bossWheel;
     private int bidSize = 0;
     private bool isBid = false;
     
@@ -370,6 +368,8 @@ public class UI_Controller : MonoBehaviour
     }
     IEnumerator EveningStart()
     {
+        baseWheel.transform.localRotation = Quaternion.Euler(180, 31, 0);
+        bossWheel.transform.localRotation = Quaternion.Euler(180, 31, 0);
         lightning.transform.rotation = Quaternion.Euler(90, 30, 0);
         dayUI.SetActive(false);
         
@@ -467,12 +467,78 @@ public class UI_Controller : MonoBehaviour
             disasterNum = chance / 20;
         }
 
-        /*baseWheelAnim.Play(baseWheelAnimClips[disasterNum].name);
-        bossWheelAnim.Play(bossWheelAnimClips[disasterNum].name);*/
+        StartCoroutine(WheelRotate(disasterNum));
         cycle.transform.GetChild(0).GetComponent<NightOperator>().SpinTheWheel(disasterNum);
         if (cycle.CycleData.cycleNum % 5 != 0 && cycle.RaceData.IsRerollDef == 1) StartCoroutine(RespinSpawn());
         else if (cycle.CycleData.cycleNum % 5 == 0 && cycle.RaceData.IsRerollBoss == 1) StartCoroutine(RespinSpawn());
         else StartCoroutine(NightResult(disasterNum));
+    }
+    IEnumerator WheelRotate(int disasterNum)
+    {
+        int countRounds = Random.Range(2, 3);
+        int minDegree = 0, maxDegree = 0;
+        float currentDegree;
+        if (cycle.DayNum() % 5 != 0 || cycle.DayNum() < 5)
+        {
+            switch (disasterNum)
+            {
+                case 0:
+                    minDegree = -36;
+                    maxDegree = 30;
+                    break;
+                case 1:
+                    minDegree = -105;
+                    maxDegree = -42;
+                    break;
+                case 2:
+                    minDegree = -180;
+                    maxDegree = -115;
+                    break;
+                case 3:
+                    minDegree = -323;
+                    maxDegree = -260;
+                    break;
+                case 4:
+                    minDegree = -253;
+                    maxDegree = -187;
+                    break;
+            }
+            currentDegree = (Random.Range(minDegree, maxDegree) - 360 * countRounds);
+            baseWheel.transform.DOLocalRotateQuaternion
+                (Quaternion.Euler(180, currentDegree, 0), 4f);
+            yield return new WaitForSeconds(4f);
+        }
+        else
+        {
+            switch (disasterNum)
+            {
+                case 0:
+                    minDegree = 117;
+                    maxDegree = 180;
+                    break;
+                case 1:
+                    minDegree = 42;
+                    maxDegree = 108;
+                    break;
+                case 2:
+                    minDegree = 189;
+                    maxDegree = 251;
+                    break;
+                case 3:
+                    minDegree = 260;
+                    maxDegree = 323;
+                    break;
+                case 4:
+                    minDegree = 330;
+                    maxDegree = 396;
+                    break;
+            }
+
+            currentDegree = (Random.Range(minDegree, maxDegree) + 360 * countRounds);
+            bossWheel.transform.DOLocalRotateQuaternion
+                (Quaternion.Euler(180, currentDegree, 0), 4f);
+            yield return new WaitForSeconds(4f);
+        }
     }
     public void RespinWheel()
     {
