@@ -1,7 +1,10 @@
-﻿public class EarthquakeBoss : Disaster
+﻿using Project.Scripts.Race.Disaster.Animations;
+
+public class EarthquakeBoss : Disaster
 {
-    public EarthquakeBoss(CycleComponent _cycle, PepperStorage _storage, Shelter _shelter, float range, ElementUpgrader _elementUpgrader) : 
-        base(_cycle, _storage, _shelter, range, _elementUpgrader)
+    public EarthquakeBoss(CycleComponent _cycle, PepperStorage _storage, Shelter _shelter, 
+        float range, ElementUpgrader _elementUpgrader, DisasterAnimation disasterAnimation) : 
+        base(_cycle, _storage, _shelter, range, _elementUpgrader, disasterAnimation)
     {
         rangeHP = 0.3f * cycle.RaceData.BossDamageFactor;
         rangeMaxHP = 0.2f * cycle.RaceData.BossDamageFactor;

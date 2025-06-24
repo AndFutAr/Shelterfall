@@ -35,6 +35,8 @@ public class CycleComponent : MonoBehaviour, ITimeStateMachine
     public RaceData RaceData;
     public CycleTimeReader TimeReader;
     public PepperBank PepperBank;
+    
+    [SerializeField] private DisasterAnimationsMediator _disasterAnimationsMediator;
 
     public void IncreaseDay(float range)
     {
@@ -232,9 +234,11 @@ public class CycleComponent : MonoBehaviour, ITimeStateMachine
                 slCycle.SaveCycle(CycleData, transform.parent.GetComponent<RaceController>());
                 if(_operator != null) Destroy(_operator);
                 _operator = Instantiate(_operatorPrefab, transform);
+                
                 day = _operator.GetComponent<DayOperator>();
                 evening = _operator.GetComponent<EveningOperator>();
                 night = _operator.GetComponent<NightOperator>();
+                night.SetDisasterAnimationMediator(_disasterAnimationsMediator);
                 
                 night.enabled = false; 
                 day.enabled = true; 
@@ -264,5 +268,10 @@ public class CycleComponent : MonoBehaviour, ITimeStateMachine
         _currentTimeState = state;
         
         state?.Open();
+    }
+
+    public void SetAnimationMediator(DisasterAnimationsMediator disasterAnimationsMediator)
+    {
+        _disasterAnimationsMediator = disasterAnimationsMediator;
     }
 }

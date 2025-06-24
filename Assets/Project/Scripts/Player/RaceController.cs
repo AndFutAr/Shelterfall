@@ -39,6 +39,7 @@ public class RaceController : MonoBehaviour
         slRace.SaveRace(RaceData);
     }
 
+    public DisasterAnimationsMediator DisasterAnimationsMediator;
     public RaceData RaceData;
     public CycleTimeReader timeReader;
     public PepperBank pepperBank;
@@ -180,6 +181,7 @@ public class RaceController : MonoBehaviour
             _cycle.RaceData = RaceData;
             _cycle.PepperBank = pepperBank;
             _cycle.SetCanvas(ui.Canvas());
+            _cycle.SetAnimationMediator(DisasterAnimationsMediator);
 
             _shelterView.GetShelter(_cycleController.GetComponent<Shelter>());
             ui.SetUI(_cycle);

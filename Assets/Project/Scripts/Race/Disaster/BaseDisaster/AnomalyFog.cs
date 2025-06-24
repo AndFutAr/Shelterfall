@@ -1,7 +1,10 @@
-﻿public class AnomalyFog : Disaster
+﻿using Project.Scripts.Race.Disaster.Animations;
+
+public class AnomalyFog : Disaster
 {
-    public AnomalyFog(CycleComponent _cycle, PepperStorage _storage, Shelter _shelter, float range, ElementUpgrader _elementUpgrader) : 
-        base(_cycle, _storage, _shelter, range, _elementUpgrader)
+    public AnomalyFog(CycleComponent _cycle, PepperStorage _storage, Shelter _shelter, float range, 
+        ElementUpgrader _elementUpgrader, DisasterAnimation disasterAnimation) : 
+        base(_cycle, _storage, _shelter, range, _elementUpgrader, disasterAnimation)
     {
         rangeHP = 0.1f;
         rangeMaxHP = 0.1f;
