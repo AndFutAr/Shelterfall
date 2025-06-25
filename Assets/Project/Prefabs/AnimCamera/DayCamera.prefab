@@ -49,7 +49,7 @@ MonoBehaviour:
   m_UpdateMethod: 0
   m_PositionUnits: 0
   m_Speed: 0
-  m_Position: 5
+  m_Position: 2
 --- !u!111 &8205223524018130153
 Animation:
   m_ObjectHideFlags: 0

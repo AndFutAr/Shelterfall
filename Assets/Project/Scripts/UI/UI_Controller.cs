@@ -16,6 +16,7 @@ public class UI_Controller : MonoBehaviour
     public CycleTimeReader timeReader;
     public CycleComponent cycle;
     public Camera camera, startCamera;
+    private Vector3 cameraNightPosition;
 
     [SerializeField] private GameObject startMenu, gameMenu, setMenu, progressMenu, raceOverMenu, raceWinMenu, lastMenu, enchantmentMenu;
 
@@ -23,11 +24,11 @@ public class UI_Controller : MonoBehaviour
     [SerializeField] private GameObject dayUI, eveningUI, nightUI, windowUI, baseEnchantsMenu, elEnchantsMenu;
     [SerializeField] private GameObject dayIcon, eveningIcon, nightIcon;
     [SerializeField] private Vector3 lastIconPos, curIconPos, nextIconPos;
-    [SerializeField] private GameObject animDayPrefab, animEveningPrefab, animNightPrefab;
-    private Animation animDay, animEvening, animNight;
+    [SerializeField] private GameObject animDayPrefab, animEveningPrefab, animNightPrefab1, animNightPrefab2;
+    private Animation animDay, animEvening, animNight1, animNight2;
     [SerializeField] private CinemachineSmoothPath _path;
     
-    [SerializeField] private GameObject location, postProgression, pepppers0;
+    [SerializeField] private GameObject location, postProgression;
     [SerializeField] private TMP_Text bestScore;
     [SerializeField] private Slider raceScore;
     [SerializeField] private GameObject ExitButton;
@@ -48,6 +49,7 @@ public class UI_Controller : MonoBehaviour
     [SerializeField] private GameObject rerollBase, rerollElement, getCardsButton;
     [SerializeField] private TMP_Text bidDisText, bidSizeText;
     [SerializeField] private GameObject wheel, baseWheel, bossWheel;
+    [SerializeField] private GameObject baseText, bossText;
     private int bidSize = 0;
     private bool isBid = false;
     
@@ -86,8 +88,10 @@ public class UI_Controller : MonoBehaviour
         animDay.gameObject.GetComponent<CinemachineDollyCart>().m_Path = _path;
         animEvening = Instantiate(animEveningPrefab, transform).GetComponent<Animation>();
         animEvening.gameObject.GetComponent<CinemachineDollyCart>().m_Path = _path;
-        animNight = Instantiate(animNightPrefab, transform).GetComponent<Animation>();
-        animNight.gameObject.GetComponent<CinemachineDollyCart>().m_Path = _path;
+        animNight1 = Instantiate(animNightPrefab1, transform).GetComponent<Animation>();
+        animNight1.gameObject.GetComponent<CinemachineDollyCart>().m_Path = _path;
+        animNight2 = Instantiate(animNightPrefab2, transform).GetComponent<Animation>();
+        animNight2.gameObject.GetComponent<CinemachineDollyCart>().m_Path = _path;
         
         startMenu.SetActive(true);
         gameMenu.SetActive(false);
@@ -183,7 +187,6 @@ public class UI_Controller : MonoBehaviour
     }
     public void OpenSet(GameObject _lastMenu)
     {
-        pepppers0.SetActive(true);
         setMenu.SetActive(true);
         startMenu.SetActive(false);
         gameMenu.SetActive(false);
@@ -203,7 +206,6 @@ public class UI_Controller : MonoBehaviour
     }
     public void Back()
     {
-        pepppers0.SetActive(false);
         location.SetActive(true);
         postProgression.SetActive(false);
         setMenu.SetActive(false);
@@ -222,7 +224,7 @@ public class UI_Controller : MonoBehaviour
         gameMenu.transform.localPosition = new Vector3(0, 1080, 0);
         startMenu.transform.DOLocalMove(new Vector3(0, -1080, 0), 1f);
         gameMenu.transform.DOLocalMove(new Vector3(0, 0, 0), 1f);
-        startCamera.transform.DOLocalMove(camera.transform.position, 1f);
+        startCamera.transform.DOMove(camera.transform.position, 1f); 
         startCamera.transform.DORotate(camera.transform.rotation.eulerAngles, 1f);
         yield return new WaitForSeconds(1f);
         startMenu.SetActive(false);
@@ -342,6 +344,8 @@ public class UI_Controller : MonoBehaviour
     public void StartNight() => StartCoroutine(NightStart());
     IEnumerator DayStart()
     {
+        baseText.SetActive(true);
+        bossText.SetActive(true);
         bidWinIcon.SetActive(false);
         bidLoseIcon.SetActive(false);
         bidReturnIcon.SetActive(false);
@@ -351,7 +355,8 @@ public class UI_Controller : MonoBehaviour
         nightUI.SetActive(false);
         
         camera.transform.SetParent(animDay.transform);
-        animNight.GetComponent<CinemachineDollyCart>().m_Position = 2;
+        animNight1.GetComponent<CinemachineDollyCart>().m_Position = 2;
+        animNight2.GetComponent<CinemachineDollyCart>().m_Position = 5;
         animDay.Play();
         lightning.transform.DORotate(new Vector3(90, 30, 0), 2f);
         nightIcon.transform.DOLocalMove(lastIconPos, 0.5f);
@@ -378,7 +383,7 @@ public class UI_Controller : MonoBehaviour
         dayUI.SetActive(false);
         
         camera.transform.SetParent(animEvening.transform);
-        animDay.GetComponent<CinemachineDollyCart>().m_Position = 5;
+        animDay.GetComponent<CinemachineDollyCart>().m_Position = 2;
         animEvening.Play();
         lightning.transform.DORotate(new Vector3(50, 30, 0), 2f);
         dayIcon.transform.DOLocalMove(lastIconPos, 0.5f);
@@ -392,14 +397,15 @@ public class UI_Controller : MonoBehaviour
     }
     IEnumerator NightStart()
     {
+        cameraNightPosition = camera.transform.position;
         lightning.transform.rotation = Quaternion.Euler(50, 30, 0);
         rerollBase.SetActive(false);
         rerollElement.SetActive(false);
         eveningUI.SetActive(false);
         
-        camera.transform.SetParent(animNight.transform);
+        camera.transform.SetParent(animNight1.transform);
         animEvening.GetComponent<CinemachineDollyCart>().m_Position = 0;
-        animNight.Play();
+        animNight1.Play();
         lightning.transform.DORotate(new Vector3(-90, 30, 0), 2f);
         eveningIcon.transform.DOLocalMove(lastIconPos, 0.5f);
         nightIcon.transform.DOLocalMove(curIconPos, 0.5f);
@@ -420,6 +426,7 @@ public class UI_Controller : MonoBehaviour
 
     public void GoToDay()
     {
+        camera.transform.position = cameraNightPosition;
         timeReader.GoDay();
     }
 
@@ -461,6 +468,8 @@ public class UI_Controller : MonoBehaviour
     }
     public void StartWheel()
     {
+        baseText.SetActive(false);
+        bossText.SetActive(false);
         rollDis.SetActive(false);
         rerollDis.SetActive(false);
         int chance = UnityEngine.Random.Range(0, 100);
@@ -470,8 +479,7 @@ public class UI_Controller : MonoBehaviour
             chance = UnityEngine.Random.Range(0, 100);
             disasterNum = chance / 20;
         }
-
-        disasterNum = 1;
+        //disasterNum = 1;
 
         StartCoroutine(WheelRotate(disasterNum, OnCompleteSpinWheel));
     }
@@ -523,7 +531,8 @@ public class UI_Controller : MonoBehaviour
             _deathCataclysmParticle.Play();
             yield return new WaitForSeconds(0.45f);
             _deathCataclysmParticle.gameObject.SetActive(false);
-            
+            camera.transform.parent = animNight2.transform;
+            animNight2.Play();
             onCompleteSpinWheel?.Invoke();
         }
         else
@@ -555,14 +564,14 @@ public class UI_Controller : MonoBehaviour
             currentDegree = (Random.Range(minDegree, maxDegree) + 360 * countRounds);
             bossWheel.transform.DOLocalRotateQuaternion
                 (Quaternion.Euler(180, currentDegree, 0), 4f);
-            
             yield return new WaitForSeconds(4f);
 
             _deathCataclysmParticle.gameObject.SetActive(true);
             _deathCataclysmParticle.Play();
             yield return new WaitForSeconds(0.45f);
             _deathCataclysmParticle.gameObject.SetActive(false);
-            
+            camera.transform.parent = animNight2.transform;
+            animNight2.Play();
             onCompleteSpinWheel?.Invoke();
         }
     }
@@ -594,7 +603,7 @@ public class UI_Controller : MonoBehaviour
     {
         isUsed = true;
         windowUI.SetActive(false);
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(7f);
         if (cycle.CycleData.cycleNum % 5 != 0)
         {
             _nightResults[disasterNum].SetActive(true);
